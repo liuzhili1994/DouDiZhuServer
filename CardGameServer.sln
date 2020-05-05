@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGameServer", "CardGameServer\CardGameServer.csproj", "{B01FB53B-F93D-4A6F-860D-9F4E0A45EEF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "Protocol\Protocol.csproj", "{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaligeServer", "DaligeServer\DaligeServer.csproj", "{083B984E-148D-4DE6-8E36-3F26C8E1AE7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|anycpu = Debug|anycpu
+		Release|anycpu = Release|anycpu
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B01FB53B-F93D-4A6F-860D-9F4E0A45EEF0}.Debug|anycpu.ActiveCfg = Debug|anycpu
+		{B01FB53B-F93D-4A6F-860D-9F4E0A45EEF0}.Debug|anycpu.Build.0 = Debug|anycpu
+		{B01FB53B-F93D-4A6F-860D-9F4E0A45EEF0}.Release|anycpu.ActiveCfg = Release|anycpu
+		{B01FB53B-F93D-4A6F-860D-9F4E0A45EEF0}.Release|anycpu.Build.0 = Release|anycpu
+		{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}.Release|anycpu.Build.0 = Release|Any CPU
+		{083B984E-148D-4DE6-8E36-3F26C8E1AE7A}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{083B984E-148D-4DE6-8E36-3F26C8E1AE7A}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{083B984E-148D-4DE6-8E36-3F26C8E1AE7A}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{083B984E-148D-4DE6-8E36-3F26C8E1AE7A}.Release|anycpu.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

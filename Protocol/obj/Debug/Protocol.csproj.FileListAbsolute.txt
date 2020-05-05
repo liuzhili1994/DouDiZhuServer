@@ -1,0 +1,6 @@
+/Users/dalige/WorkSpace/Unity/CardGame/Card/Assets/Plugins/Protocol.dll
+/Users/dalige/WorkSpace/Unity/CardGame/Card/Assets/Plugins/Protocol.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/Protocol/obj/Debug/Protocol.csprojAssemblyReference.cache
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/Protocol/obj/Debug/Protocol.csproj.CoreCompileInputs.cache
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/Protocol/obj/Debug/Protocol.dll
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/Protocol/obj/Debug/Protocol.pdb

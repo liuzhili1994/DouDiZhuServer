@@ -1,0 +1,6 @@
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/bin/Debug/DaligeServer.dll
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/bin/Debug/DaligeServer.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/obj/Debug/DaligeServer.csproj.CoreCompileInputs.cache
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/obj/Debug/DaligeServer.dll
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/obj/Debug/DaligeServer.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/DaligeServer/obj/Debug/DaligeServer.csprojAssemblyReference.cache

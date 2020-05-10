@@ -38,6 +38,9 @@
     <Compile Include="Logic\IHandler.cs" />
     <Compile Include="Logic\AccountHandler.cs" />
     <Compile Include="Model\AccountModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Cache\UserCache.cs" />
+    <Compile Include="Logic\UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaligeServer\DaligeServer.csproj">

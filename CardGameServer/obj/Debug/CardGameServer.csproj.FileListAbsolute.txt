@@ -9,3 +9,14 @@
 /Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/CardGameServer/bin/Debug/DaligeServer.pdb
 /Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/CardGameServer/bin/Debug/Protocol.pdb
 /Users/dalige/WorkSpace/Unity/CardGame/CardGameServer/CardGameServer/obj/Debug/CardGameServer.csproj.CopyComplete
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/CardGameServer.exe
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/CardGameServer.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/DaligeServer.dll
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/Protocol.dll
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/DaligeServer.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/bin/Debug/Protocol.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/obj/Debug/CardGameServer.csprojAssemblyReference.cache
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/obj/Debug/CardGameServer.csproj.CoreCompileInputs.cache
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/obj/Debug/CardGameServer.csproj.CopyComplete
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/obj/Debug/CardGameServer.exe
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/CardGameServer/obj/Debug/CardGameServer.pdb

@@ -3,6 +3,8 @@ using CardGameServer.Cache;
 using CardGameServer.Model;
 using DaligeServer;
 using Protocol.Code;
+using Protocol.Dto;
+
 namespace CardGameServer.Logic
 {
     /// <summary>
@@ -12,8 +14,8 @@ namespace CardGameServer.Logic
     {
         UserCache userCache = Caches.User;
         AccountCache accountCache = Caches.Account;
-        
 
+        UserDto user = new UserDto();
         public void OnDisconnect(ClientPeer client)
         {
             if (userCache.IsOnLine(client))
@@ -27,15 +29,11 @@ namespace CardGameServer.Logic
             switch (subCode)
             {
                 case UserCode.GET_INFO_CREQ:
-
+                    GetInfo(client);
                     break;
                 case UserCode.CREAT_CREQ:
                     Creat(client, value.ToString()); ;
                     break;
-                case UserCode.ONLINE_CREQ:
-
-                    break;
-
                 default:
                     break;
             }
@@ -51,7 +49,9 @@ namespace CardGameServer.Logic
                 if (!accountCache.IsOnline(client))
                 {
                     //非法登陆
-                    client.StartSend(OpCode.USER, UserCode.CREAT_SRES, "非法登陆");
+                    user.Set("非法登陆");
+                    client.StartSend(OpCode.USER, UserCode.CREAT_SRES, user);
+                    Console.WriteLine("非法登陆");
                     return;
                 }
 
@@ -61,11 +61,16 @@ namespace CardGameServer.Logic
                 if (userCache.IsExist(accountId))
                 {
                     //重复创建
-                    client.StartSend(OpCode.USER, UserCode.CREAT_SRES, "重复创建");
+                    user.Set("重复创建");
+                    client.StartSend(OpCode.USER, UserCode.CREAT_SRES, user);
+                    Console.WriteLine("重复创建");
                     return;
                 }
                 //创建角色
                 userCache.Creat(name, accountId);
+                user.Set("创建角色成功");
+                client.StartSend(OpCode.USER,UserCode.CREAT_SRES,user);
+                Console.WriteLine("创建角色成功");
             });
             
         }
@@ -79,7 +84,9 @@ namespace CardGameServer.Logic
                 //判断这个客户端是不是非法登陆
                 if (!accountCache.IsOnline(client))
                 {
-                    client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES,"非法登陆");
+                    user.Set("非法登陆"); 
+                    client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES, user);
+                    Console.WriteLine("非法登陆");
                     return;
                 }
 
@@ -87,13 +94,19 @@ namespace CardGameServer.Logic
                 if (!userCache.IsExist(accountId))
                 {
                     //不存在角色
-                    client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES,"不存在角色");
+                    user.Set("没有角色");
+                    client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES, user);
+                    Console.WriteLine("没有角色");
                     return;
                 }
 
-                //TODO  有问题
+                
                 UserModel model = userCache.GetModelByAccountId(accountId);
-                client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES,model);//获取成功
+                user.Set("获取角色成功", model.name,model.beens,model.winCount,model.loseCount,model.runCount,model.lv,model.exp);
+                client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES,user);//获取成功
+                Console.WriteLine("获取角色成功"); 
+                //有角色就自动上线
+                OnLine(client);
             });
         }
 
@@ -106,7 +119,9 @@ namespace CardGameServer.Logic
                 //判断这个客户端是不是非法登陆
                 if (!accountCache.IsOnline(client))
                 {
-                    client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, "非法登陆");
+                    user.Set("非法登陆");
+                    client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, user);
+                    Console.WriteLine("非法登陆");
                     return;
                 }
 
@@ -114,14 +129,18 @@ namespace CardGameServer.Logic
                 if (!userCache.IsExist(accountId))
                 {
                     //不存在角色
-                    client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, "不存在角色");
+                    user.Set("没有角色");
+                    client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, user);
+                    Console.WriteLine("没有角色");
                     return;
                 }
 
                 //上线成功
                 int userId = userCache.GetId(accountId);
                 userCache.OnLine(client,userId);
-                client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, "上线成功");//上线成功
+                user.Set("上线成功");
+                client.StartSend(OpCode.USER, UserCode.ONLINE_SRES, user);//上线成功
+                Console.WriteLine("角色上线成功");
             });
         }
     }

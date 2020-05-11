@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CardGameServer.Cache
 {
-    public class Caches
+    public static class Caches
     {
         public static AccountCache Account { get; set; }
         public static UserCache User { get; set; }

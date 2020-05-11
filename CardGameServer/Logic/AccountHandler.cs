@@ -51,27 +51,29 @@ namespace CardGameServer.Logic
                         if (accountCache.IsOnline(account))
                         {
                             //账号在线
-                            client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "账号已经在线...");
+                            client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "账号已经在线");
                             Console.WriteLine("账号已经在线...");
                         }
                         else
                         {
                             //登录成功
                             accountCache.Online(account, client);
-                            client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "登录成功...");
+                            client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "登录成功");
                             Console.WriteLine("登录成功...");
                         }
                     }
                     else
                     {
                         //密码输入错误
-                        client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "密码输入错误...");
+                        client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "密码输入错误");
+                        Console.WriteLine("密码输入错误");
                     }
                 }
                 else
                 {
                     //不存在该账号
-                    client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "不存在该账号...");
+                    client.StartSend(OpCode.ACCOUNT, AccountCode.LOGIN, "不存在该账号");
+                    Console.WriteLine("不存在该账号");
                 }
             });
             
@@ -84,7 +86,7 @@ namespace CardGameServer.Logic
                 if (accountCache.IsExist(account))
                 {
                     //账号已经存在
-                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "账号已经存在...");
+                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "账号已经存在");
                     Console.WriteLine("账号已经存在...");
                     return;
                 }
@@ -92,7 +94,7 @@ namespace CardGameServer.Logic
                 if (string.IsNullOrEmpty(account))
                 {
                     //表示账号输入不合法
-                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "账号输入不合法...");
+                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "账号输入不合法");
                     Console.WriteLine("账号输入不合法...");
                     return;
                 }
@@ -100,14 +102,14 @@ namespace CardGameServer.Logic
                 if (string.IsNullOrEmpty(password) || password.Length <= 4 || password.Length >= 16)
                 {
                     //密码不合法
-                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "密码输入不合法...");
+                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "密码输入不合法");
                     Console.WriteLine("密码输入不合法...");
                     return;
                 }
 
                 //可以注册了
                 accountCache.Creat(account, password);
-                client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "注册成功...");
+                client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "注册成功");
                 Console.WriteLine("注册成功...");
             });
             

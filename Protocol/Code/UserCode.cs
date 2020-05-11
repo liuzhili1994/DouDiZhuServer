@@ -12,7 +12,7 @@ namespace Protocol.Code
         public const int CREAT_SRES = 3;
 
         //角色上线
-        public const int ONLINE_CREQ = 4;
+        //public const int ONLINE_CREQ = 4;//获取到角色自动上线
         public const int ONLINE_SRES = 5;
     }
 }

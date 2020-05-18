@@ -130,8 +130,19 @@ namespace DaligeServer
             byte[] msgBytes = EncodeTool.EncodeMsg(msg);
             byte[] msgPacket = EncodeTool.EncodeMessage(msgBytes);
 
+            ////存到消息队列中
+            //sendQueue.Enqueue(msgPacket);
+            //if (!isSendProcess)
+            //{
+            //    Send();
+            //}
+            StartSend(msgPacket);
+        }
+
+        public void StartSend(byte[] msg)
+        {
             //存到消息队列中
-            sendQueue.Enqueue(msgPacket);
+            sendQueue.Enqueue(msg);
             if (!isSendProcess)
             {
                 Send();

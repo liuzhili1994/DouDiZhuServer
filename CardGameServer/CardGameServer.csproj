@@ -41,6 +41,9 @@
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Cache\UserCache.cs" />
     <Compile Include="Logic\UserHandler.cs" />
+    <Compile Include="Cache\Room\MatchRoom.cs" />
+    <Compile Include="Cache\Room\MatchCache.cs" />
+    <Compile Include="Logic\MatchHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaligeServer\DaligeServer.csproj">
@@ -51,6 +54,9 @@
       <Project>{ABC9086E-6FA5-4171-8665-E214FB3CD2A1}</Project>
       <Name>Protocol</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cache\Room\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -142,11 +142,21 @@ namespace CardGameServer.Cache
         }
 
         /// <summary>
+        /// 根据角色id获取角色数据模型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public UserModel GetModelById(int id)
+        {
+            return idModelDic[id];
+        }
+
+        /// <summary>
         /// 根据角色id 获取客户端
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ClientPeer GetModelById(int id)
+        public ClientPeer GetClientById(int id)
         {
             return idClientDic[id];
         }

@@ -11,5 +11,10 @@
         /// 角色模块
         /// </summary>
         public const int USER = 1;
+
+        /// <summary>
+        /// 匹配房间
+        /// </summary>
+        public const int MATCHROOM = 2;
     }
 }

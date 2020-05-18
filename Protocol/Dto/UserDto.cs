@@ -4,6 +4,7 @@ namespace Protocol.Dto
     [Serializable]
     public class UserDto
     {
+        public int id;
         /// <summary>
         /// 角色名称
         /// </summary>
@@ -45,8 +46,9 @@ namespace Protocol.Dto
             this.info = info;
         }
 
-        public void Set(string info,string name,int beens,int winCount,int loseCount,int runCount,int lv,int exp)
+        public void Set(string info,int id, string name,int beens,int winCount,int loseCount,int runCount,int lv,int exp)
         {
+            this.id = id;
             this.info = info;
             this.name = name;
             this.beens = beens;

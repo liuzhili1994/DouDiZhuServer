@@ -102,7 +102,7 @@ namespace CardGameServer.Logic
 
                 
                 UserModel model = userCache.GetModelByAccountId(accountId);
-                user.Set("获取角色成功", model.name,model.beens,model.winCount,model.loseCount,model.runCount,model.lv,model.exp);
+                user.Set("获取角色成功",model.id, model.name,model.beens,model.winCount,model.loseCount,model.runCount,model.lv,model.exp);
                 client.StartSend(OpCode.USER,UserCode.GET_INFO_SRES,user);//获取成功
                 Console.WriteLine("获取角色成功"); 
                 //有角色就自动上线

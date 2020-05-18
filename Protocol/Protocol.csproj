@@ -36,6 +36,12 @@
     <Compile Include="Dto\AccountDto.cs" />
     <Compile Include="Code\UserCode.cs" />
     <Compile Include="Dto\UserDto.cs" />
+    <Compile Include="Code\MatchRoomCode.cs" />
+    <Compile Include="Dto\MatchRoomDto.cs" />
+    <Compile Include="Dto\Card\CardDto.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dto\Card\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

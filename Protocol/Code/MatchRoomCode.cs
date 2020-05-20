@@ -10,6 +10,9 @@ namespace Protocol.Code
         public const int CANCELMATCH_CREQ = 2;
         public const int CANCELMATCH_BRO = 3;
 
+        public const int ENTERROOM_CREQ = 8;
+        public const int ENTERROOM_SRES = 9;
+
         public const int READY_CREQ = 4;
         public const int READY_BRO = 5;
 

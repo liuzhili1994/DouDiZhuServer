@@ -25,6 +25,11 @@ namespace CardGameServer.Cache.Room
         public Dictionary<int, ClientPeer> uIdClientDic;
 
         /// <summary>
+        /// 存储用户进入房间的顺序
+        /// </summary>
+        public List<int> uidList;
+
+        /// <summary>
         /// 已准备的用户id 集合   全部准备了就直接开始游戏了
         /// </summary>
         public List<int> readyUidList;
@@ -52,6 +57,8 @@ namespace CardGameServer.Cache.Room
         public void Enter(int userId,ClientPeer client)
         {
             uIdClientDic.Add(userId,client);
+            uidList.Add(userId);
+            
         }
         /// <summary>
         /// 离开房间
@@ -60,7 +67,8 @@ namespace CardGameServer.Cache.Room
         public void Leave(int userId)
         {
             uIdClientDic.Remove(userId);
-
+            uidList.Remove(userId);
+            
         }
 
         public void Ready(int userId)
@@ -128,6 +136,7 @@ namespace CardGameServer.Cache.Room
         {
             readyUidList.Clear();
             uIdClientDic.Clear();
+            uidList.Clear();
         }
 
         public MatchRoom(int id)
@@ -135,6 +144,7 @@ namespace CardGameServer.Cache.Room
             this.id = id;
             uIdClientDic = new Dictionary<int, ClientPeer>();
             readyUidList = new List<int>();
+            uidList = new List<int>();
         }
 
 

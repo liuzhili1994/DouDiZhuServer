@@ -15,7 +15,7 @@ namespace CardGameServer.Logic
 
         public void OnDisconnect(ClientPeer client)
         {
-            Leave(client);
+            CancelMatch(client);
         }
 
         public void OnReceive(ClientPeer client, int subCode, object value)
@@ -23,10 +23,13 @@ namespace CardGameServer.Logic
             switch (subCode)
             {
                 case MatchRoomCode.STARTMATCH_CREQ:
-                    Enter(client);
+                    StartMatch(client);
                     break;
                 case MatchRoomCode.CANCELMATCH_CREQ:
-                    Leave(client);
+                    CancelMatch(client);
+                    break;
+                case MatchRoomCode.ENTERROOM_CREQ:
+                    EnterRoom(client);
                     break;
                 case MatchRoomCode.READY_CREQ:
                     Ready(client);
@@ -37,10 +40,10 @@ namespace CardGameServer.Logic
         }
 
         /// <summary>
-        /// 用户加入房间，将所有信息互相发送 新玩家加入了 房间，以及把新玩家信息发送给其他人，其他人的信息也发给新玩家
+        /// 用户开始匹配
         /// </summary>
         /// <param name="client"></param>
-        private void Enter(ClientPeer client)
+        private void StartMatch(ClientPeer client)
         {
             SingleExecute.Instance.Execute(()=> {
                 int userId = user.GetId(client);
@@ -54,20 +57,30 @@ namespace CardGameServer.Logic
                 userDto.Set("", model.id, model.name, model.beens, model.winCount, model.loseCount, model.runCount, model.lv, model.exp);
                 //对房间内其他玩家进行广播  新用户 加入了房间
                 room.Brocast(OpCode.MATCHROOM, MatchRoomCode.STARTMATCH_BRO, userDto,client);
-                //将房间信息发送给自己
+                //将匹配到的房间号给玩家
                 var roomDto = MakeRoomDto(room);
-                client.StartSend(OpCode.MATCHROOM,MatchRoomCode.STARTMATCH_SRES,roomDto);
-                Console.WriteLine("有玩家进入匹配房间 ：" + room.id);
+                client.StartSend(OpCode.MATCHROOM,MatchRoomCode.STARTMATCH_SRES, roomDto);
+                Console.WriteLine(string.Format("玩家 : {0}  匹配到房间 ：{1}", userDto.name,room.id));
+                //int index = -1;
+                //for (int i = 0; i < roomDto.uIdList.Count; i++)
+                //{
+                //    Console.WriteLine(roomDto.uIdList[i]);
+                //    if (roomDto.uIdList[i] == userDto.id)
+                //    {
+                //        index = i + 1;
+                //    }
+                //}
+                //Console.WriteLine(string.Format("有{1}个人。第{0}个进来的",index,roomDto.uIdList.Count));
             });
             
         }
 
 
         /// <summary>
-        /// 用户离开房间
+        /// 用户离开匹配
         /// </summary>
         /// <param name="client"></param>
-        private void Leave(ClientPeer client)
+        private void CancelMatch(ClientPeer client)
         {
             SingleExecute.Instance.Execute(()=> {
                 if (!user.IsOnLine(client))
@@ -87,9 +100,25 @@ namespace CardGameServer.Logic
                 MatchRoom room = match.Leave(userId);
                 if (!room.IsEmpty())
                 {
-                    room.Brocast(OpCode.MATCHROOM,MatchRoomCode.CANCELMATCH_BRO,user.GetModelByClient(client).name,client);
+                    room.Brocast(OpCode.MATCHROOM,MatchRoomCode.CANCELMATCH_BRO,userId,client);
                 }
-                Console.WriteLine("有玩家了离开匹配房间 ：" + room.id);
+                Console.WriteLine(string.Format("玩家 : {0}  取消进入房间 ：{1}", user.GetModelByClient(client).name, room.id));
+
+
+            });
+        }
+
+        /// <summary>
+        /// 用户进入了房间  获取房间信息  发送给客户端
+        /// </summary>
+        /// <param name="client"></param>
+        private void EnterRoom(ClientPeer client)
+        {
+            SingleExecute.Instance.Execute(()=> {
+                MatchRoom room = match.GetRoom(user.GetId(client));
+                var roomDto = MakeRoomDto(room);
+                client.StartSend(OpCode.MATCHROOM,MatchRoomCode.ENTERROOM_SRES,roomDto);
+                Console.WriteLine(string.Format("玩家 : {0}  进入房间 ：{1}", user.GetModelByClient(client).name, room.id));
 
             });
         }
@@ -127,6 +156,8 @@ namespace CardGameServer.Logic
                     room.Brocast(OpCode.MATCHROOM,MatchRoomCode.START_BRO,null);
                     match.Destroy(room);
                 }
+                Console.WriteLine(string.Format("玩家 : {0}  在房间 ：{1} 准备了", user.GetModelByClient(client).name, room.id));
+
             });
             
         }
@@ -138,18 +169,16 @@ namespace CardGameServer.Logic
         /// <returns></returns>
         private MatchRoomDto MakeRoomDto(MatchRoom room)
         {
-            MatchRoomDto roomDto = new MatchRoomDto();
+            MatchRoomDto roomDto = new MatchRoomDto(room.id);
             roomDto.readyUidList = room.readyUidList;
             //给roomDto中的所有玩家信息字典 赋值
-            foreach (var id in room.uIdClientDic.Keys)
+            foreach (var id in room.uidList)
             {
-                //if (id == userId) //TODO   自己的信息不需要发送给自己
-                //    continue;
                 UserModel model = user.GetModelById(id);
                 UserDto userDto = new UserDto();
                 userDto.Set("", model.id, model.name, model.beens, model.winCount, model.loseCount, model.runCount, model.lv, model.exp);
 
-                roomDto.uIdUdtoDic.Add(id, userDto);
+                roomDto.Add(userDto);
             }
             return roomDto;
         }

@@ -66,7 +66,7 @@ namespace CardGameServer.Cache.Room
                     continue;
                 room.Enter(userId,client);
                 uIdRidDic.Add(userId,room.id);
-                rIdRoomDic.Add(room.id,room);
+                
                 return room;
             }
             MatchRoom tempRoom = null;
@@ -101,6 +101,7 @@ namespace CardGameServer.Cache.Room
             MatchRoom room = rIdRoomDic[roomId];
             room.Leave(userId);
             uIdRidDic.Remove(userId);
+            
             if (room.IsEmpty())
             {
                 //这里按流程一步一步走的，所有不需要清空数据就可以入队列

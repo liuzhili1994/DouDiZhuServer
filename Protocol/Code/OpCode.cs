@@ -16,5 +16,10 @@
         /// 匹配房间
         /// </summary>
         public const int MATCHROOM = 2;
+
+        /// <summary>
+        /// 聊天模块
+        /// </summary>
+        public const int CHAT = 3;
     }
 }

@@ -86,7 +86,7 @@ namespace DaligeServer
                 e.Completed += E_Completed;
             }
 
-            Console.WriteLine("等待客户端连接...");
+            //Console.WriteLine("等待客户端连接...");
             
             
             //返回值表示异步事件是否完成，如果返回true 代表正在执行，执行完成后会触发 E_Completed
@@ -231,13 +231,15 @@ namespace DaligeServer
                     throw new Exception("请确保当前有客户端连接...");
                 }
 
-                Console.WriteLine(client.ClientSocket.RemoteEndPoint.ToString() + "  客户端断开连接，原因：" + reason);
+                
                 //通知应用层，这个客户端断开了
                 application.OnDisconnect(client);
-
+                Console.WriteLine(client.ClientSocket.RemoteEndPoint.ToString() + "  客户端断开连接，原因：" + reason);
                 client.Disconnect();
                 clientPeerPool.Enqueue(client);
                 acceptSemaphore.Release();
+
+                
             }
             catch (Exception e)
             {

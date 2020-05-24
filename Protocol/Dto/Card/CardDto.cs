@@ -5,10 +5,6 @@ namespace Protocol.Dto.Card
     public class CardDto
     {
         /// <summary>
-        /// 唯一id
-        /// </summary>
-        public int id;
-        /// <summary>
         /// 名称
         /// </summary>
         public string name;
@@ -17,7 +13,7 @@ namespace Protocol.Dto.Card
         /// </summary>
         public int color;
         /// <summary>
-        /// 权重
+        /// 权值
         /// </summary>
         public int weight;
 
@@ -26,9 +22,8 @@ namespace Protocol.Dto.Card
             
         }
 
-        public CardDto(int id,string name,int color,int weight)
+        public CardDto(string name,int color,int weight)
         {
-            this.id = id;
             this.name = name;
             this.color = color;
             this.weight = weight;

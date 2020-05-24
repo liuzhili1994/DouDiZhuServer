@@ -9,6 +9,7 @@ namespace CardGameServer
         IHandler account = new AccountHandler();
         IHandler user = new UserHandler();
         IHandler match = new MatchHandler();
+        IHandler chat = new ChatHandler();
 
         public void OnConnect(ClientPeer client)
         {
@@ -17,6 +18,7 @@ namespace CardGameServer
 
         public void OnDisconnect(ClientPeer client)
         {
+            chat.OnDisconnect(client);
             match.OnDisconnect(client);
             user.OnDisconnect(client);
             account.OnDisconnect(client);
@@ -35,6 +37,9 @@ namespace CardGameServer
                     break;
                 case OpCode.MATCHROOM:
                     match.OnReceive(client,message.SubCode,message.Value);
+                    break;
+                case OpCode.CHAT:
+                    chat.OnReceive(client,message.SubCode,message.Value);
                     break;
                 default:
                     break;

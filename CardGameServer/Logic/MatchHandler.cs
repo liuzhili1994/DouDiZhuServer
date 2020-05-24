@@ -144,8 +144,8 @@ namespace CardGameServer.Logic
                 MatchRoom room = match.GetRoom(userId);
                 room.Ready(userId);
 
-                //广播消息  准备了 给其他两个发就行了
-                room.Brocast(OpCode.MATCHROOM,MatchRoomCode.READY_BRO,userId,client);
+                //广播消息  准备了 为什么要给自己发，确保服务器收到准备请求 回复消息后 将准备按钮隐藏
+                room.Brocast(OpCode.MATCHROOM,MatchRoomCode.READY_BRO,userId);
 
                 //是否所有玩家都准备了
                 if (room.IsAllUserReady())

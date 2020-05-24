@@ -7,3 +7,4 @@
 /Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/Protocol/obj/Debug/Protocol.csproj.CoreCompileInputs.cache
 /Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/Protocol/obj/Debug/Protocol.dll
 /Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/Protocol/obj/Debug/Protocol.pdb
+/Users/dalige/WorkSpace/Unity/CardGame/DouDiZhuServer/Protocol/obj/Debug/Protocol.csprojAssemblyReference.cache

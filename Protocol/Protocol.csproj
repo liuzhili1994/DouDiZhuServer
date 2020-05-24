@@ -39,9 +39,13 @@
     <Compile Include="Code\MatchRoomCode.cs" />
     <Compile Include="Dto\MatchRoomDto.cs" />
     <Compile Include="Dto\Card\CardDto.cs" />
+    <Compile Include="Code\ChatCode.cs" />
+    <Compile Include="Dto\ChatDto.cs" />
+    <Compile Include="Dto\Constant\ChatConstant.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dto\Card\" />
+    <Folder Include="Dto\Constant\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -44,6 +44,8 @@
     <Compile Include="Cache\Room\MatchRoom.cs" />
     <Compile Include="Cache\Room\MatchCache.cs" />
     <Compile Include="Logic\MatchHandler.cs" />
+    <Compile Include="Logic\ChatHandler.cs" />
+    <Compile Include="Logic\FightHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaligeServer\DaligeServer.csproj">

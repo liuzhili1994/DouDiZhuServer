@@ -99,13 +99,13 @@ namespace CardGameServer.Logic
                     return;
                 }
 
-                if (string.IsNullOrEmpty(password) || password.Length <= 4 || password.Length >= 16)
-                {
-                    //密码不合法
-                    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "密码输入不合法");
-                    Console.WriteLine("密码输入不合法...");
-                    return;
-                }
+                //if (string.IsNullOrEmpty(password) || password.Length <= 4 || password.Length >= 16)
+                //{
+                //    //密码不合法
+                //    client.StartSend(OpCode.ACCOUNT, AccountCode.REGISTER_SRES, "密码输入不合法");
+                //    Console.WriteLine("密码输入不合法...");
+                //    return;
+                //}
 
                 //可以注册了
                 accountCache.Creat(account, password);

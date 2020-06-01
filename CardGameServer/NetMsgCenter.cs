@@ -8,8 +8,14 @@ namespace CardGameServer
     {
         IHandler account = new AccountHandler();
         IHandler user = new UserHandler();
-        IHandler match = new MatchHandler();
+        MatchHandler match = new MatchHandler();
         IHandler chat = new ChatHandler();
+        FightHandler fight = new FightHandler();
+
+        public NetMsgCenter()
+        {
+            match.FightDelegate += fight.StartFight;
+        }
 
         public void OnConnect(ClientPeer client)
         {
@@ -18,6 +24,7 @@ namespace CardGameServer
 
         public void OnDisconnect(ClientPeer client)
         {
+            fight.OnDisconnect(client);
             chat.OnDisconnect(client);
             match.OnDisconnect(client);
             user.OnDisconnect(client);
@@ -40,6 +47,9 @@ namespace CardGameServer
                     break;
                 case OpCode.CHAT:
                     chat.OnReceive(client,message.SubCode,message.Value);
+                    break;
+                case OpCode.FIGHT:
+                    fight.OnReceive(client,message.SubCode,message.Value);
                     break;
                 default:
                     break;

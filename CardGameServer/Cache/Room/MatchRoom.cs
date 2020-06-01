@@ -81,6 +81,7 @@ namespace CardGameServer.Cache.Room
             readyUidList.Remove(userId);
         }
 
+
         private byte[] GetMsg(int opCode, int subCode, object value)
         {
             MessageData msg = new MessageData(opCode, subCode, value);

@@ -6,7 +6,6 @@ using System.Threading;
 
 namespace DaligeServer
 {
-    [SuppressMessage("ReSharper", "InvalidXmlDocComment")]
     public class ServerPeer
     {
         /// <summary>
@@ -243,7 +242,7 @@ namespace DaligeServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
         }
 

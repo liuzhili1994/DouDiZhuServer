@@ -42,10 +42,19 @@
     <Compile Include="Code\ChatCode.cs" />
     <Compile Include="Dto\ChatDto.cs" />
     <Compile Include="Dto\Constant\ChatConstant.cs" />
+    <Compile Include="Dto\Fight\PlayerDto.cs" />
+    <Compile Include="Dto\Constant\CardLibrary.cs" />
+    <Compile Include="Dto\Constant\CardConstant.cs" />
+    <Compile Include="Dto\Fight\ChuPaiDto.cs" />
+    <Compile Include="Code\FightCode.cs" />
+    <Compile Include="Dto\Constant\DictionaryConstant.cs" />
+    <Compile Include="Dto\Fight\LandlordDto.cs" />
+    <Compile Include="Dto\Fight\OverDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dto\Card\" />
     <Folder Include="Dto\Constant\" />
+    <Folder Include="Dto\Fight\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

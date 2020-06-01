@@ -21,5 +21,10 @@
         /// 聊天模块
         /// </summary>
         public const int CHAT = 3;
+
+        /// <summary>
+        /// 战斗房间
+        /// </summary>
+        public const int FIGHT = 4;
     }
 }

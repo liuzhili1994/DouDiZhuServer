@@ -170,9 +170,13 @@ namespace CardGameServer.Cache
         {
             return clientIdDic[client];
         }
-
-        public UserCache()
+        /// <summary>
+        /// 更新角色数据
+        /// </summary>
+        /// <param name="model"></param>
+        public void Update(UserModel model)
         {
+            idModelDic[model.id] = model;
         }
     }
 }

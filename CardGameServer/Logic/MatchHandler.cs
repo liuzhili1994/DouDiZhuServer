@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CardGameServer.Cache;
 using CardGameServer.Cache.Room;
 using CardGameServer.Model;
@@ -8,10 +9,14 @@ using Protocol.Dto;
 
 namespace CardGameServer.Logic
 {
+    public delegate void FightDelegate(List<int> userIdsList);
+
     public class MatchHandler : IHandler
     {
         MatchCache match = Caches.Match;
         UserCache user = Caches.User;
+
+        public event FightDelegate FightDelegate;
 
         public void OnDisconnect(ClientPeer client)
         {
@@ -147,16 +152,19 @@ namespace CardGameServer.Logic
                 //广播消息  准备了 为什么要给自己发，确保服务器收到准备请求 回复消息后 将准备按钮隐藏
                 room.Brocast(OpCode.MATCHROOM,MatchRoomCode.READY_BRO,userId);
 
+                Console.WriteLine(string.Format("玩家 : {0}  在房间 ：{1} 准备了", user.GetModelByClient(client).name, room.id));
+
                 //是否所有玩家都准备了
                 if (room.IsAllUserReady())
                 {
-                    //开始战斗
-                    //TODO
+                    Console.WriteLine(String.Format("房间 ：{0} 开始了战斗。。。",room.id));
+                    //开始战斗  调用FightHandler 的开始方法 委托
+                    if (FightDelegate != null)
+                        FightDelegate.Invoke(room.uidList);
                     //通知房间内的玩家 要进行战斗了 群发消息
                     room.Brocast(OpCode.MATCHROOM,MatchRoomCode.START_BRO,null);
                     match.Destroy(room);
                 }
-                Console.WriteLine(string.Format("玩家 : {0}  在房间 ：{1} 准备了", user.GetModelByClient(client).name, room.id));
 
             });
             

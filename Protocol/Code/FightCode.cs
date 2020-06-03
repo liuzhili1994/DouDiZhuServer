@@ -7,7 +7,8 @@ namespace Protocol.Code
         public const int QIANG_LANDLORD_SRES = 12;//抢地主回应 ： 给地主发底牌，给另外两个发广播谁是地主
 
         public const int QIANG_LANDLORD_BRO = 1;//抢地主广播
-        public const int BUQIANG_LANDLORD_BRO= 2;//不抢地主广播
+        public const int BUQIANG_LANDLORD_BRO= 16;//不抢地主广播
+
         public const int CHUPAI_CREQ= 3;//出牌请求
         public const int CHUPAI_SRES= 4;//出牌回应
         public const int CHUPAI_BRO= 5;//出牌广播
@@ -19,7 +20,10 @@ namespace Protocol.Code
         public const int GET_CARDS_SRES= 11;//服务器给牌
 
         public const int TURN_SRES = 13;//轮到谁出牌了
+        public const int TURN_BRO = 15;//广播该谁了
 
         public const int CHANGE_MUTIPLIER = 14;//改变房间倍数
+
+        public const int Restart = 17;//都不抢重新开始
     }
 }

@@ -9,7 +9,10 @@ namespace CardGameServer.Cache.Room
 {
     public class FightRoom
     {
-
+        /// <summary>
+        /// 不抢多少次重开？ 
+        /// </summary>
+        private int buQiangCount;
         
         /// <summary>
         /// 唯一id
@@ -62,13 +65,26 @@ namespace CardGameServer.Cache.Room
             {
                 playerList.Add(new PlayerDto(userId));
             }
-            
+
+            InitCards();
+
+            //初始化回合
+            round.Turn(userIds[0]);
+        }
+
+        /// <summary>
+        /// 重新洗牌
+        /// </summary>
+        public void InitCards()
+        {
+            foreach (var player in playerList)
+            {
+                player.RemoveCard(null,true);
+            }
             //洗牌
             cardLibrary.Reflesh();
             //发牌
             InitPlayerCards();
-            //初始化回合
-            round.Turn(userIds[0]);
         }
 
         /// <summary>
@@ -237,6 +253,8 @@ namespace CardGameServer.Cache.Room
 
             throw new Exception("没有这个玩家。。。");
         }
+
+       
         /// <summary>
         /// 获取用户身份
         /// </summary>
@@ -302,6 +320,25 @@ namespace CardGameServer.Cache.Room
             leavePlayerIdList.Add(userId);
             return leavePlayerIdList.Count;
         }
+        /// <summary>
+        /// 不抢就调用一次
+        /// </summary>
+        /// <returns></returns>
+        public int BuQiang()
+        {
+            this.buQiangCount++;
+            var result = this.buQiangCount;
+            if (this.buQiangCount == 3)
+            {
+                //3个都不抢
+                
+                //重新发牌
+                InitCards();
+
+                this.buQiangCount = 0;
+            }
+            return result;
+        }
 
         /// <summary>
         /// 销毁房间
@@ -312,6 +349,7 @@ namespace CardGameServer.Cache.Room
             this.leavePlayerIdList.Clear();
             this.tableCards.Clear();
             this.multiple = 1;
+            this.buQiangCount = 0;
         }
     }
 }

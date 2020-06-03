@@ -30,6 +30,7 @@ namespace CardGameServer.Logic
                     bool flag = (bool)value;
                     Qiang_Landlord(client,flag);
                     break;
+
                 case FightCode.CHUPAI_CREQ:
                     ChuPai(client,value as ChuPaiDto);
                     break;
@@ -196,19 +197,41 @@ namespace CardGameServer.Logic
                     room.SetLandlord(userId);
                     //给每个客户端发消息谁抢了地主  还要把底牌发给地主
                     client.StartSend(OpCode.FIGHT, FightCode.QIANG_LANDLORD_SRES, new LandlordDto(userId, room.tableCards));
-                    Brocast(room, OpCode.FIGHT, FightCode.QIANG_LANDLORD_CREQ, null, client);//不用给自己发
+                    Brocast(room, OpCode.FIGHT, FightCode.QIANG_LANDLORD_SRES, null, client);//不用给自己发
                 }
                 else
                 {
                     //不抢地主
                     //自己的抢地主按钮隐藏
                     //将下轮 该谁抢地主的id广播给客户端
-                    Brocast(room,OpCode.FIGHT,FightCode.BUQIANG_LANDLORD_BRO,room.TurnNext());
-                    
+                    Brocast(room,OpCode.FIGHT,FightCode.TURN_BRO,room.TurnNext());
+                    //广播谁不抢
+                    Brocast(room,OpCode.FIGHT,FightCode.BUQIANG_LANDLORD_BRO,userId);
 
+                    int count = room.BuQiang();
+                    if (count == 3)
+                    {
+                        //重新开始。给客户端发送消息 重新开始 客户端将ui重置
+                        Brocast(room, OpCode.FIGHT, FightCode.Restart, null);
+
+                        //发牌
+                        foreach (var uId in room.playerList)
+                        {
+                            ClientPeer tempClient = user.GetClientById(uId.UserId);
+                            List<CardDto> cardsDto = uId.GetCards();
+                            tempClient.StartSend(OpCode.FIGHT, FightCode.GET_CARDS_SRES, cardsDto);
+                        }
+
+                        //抢地主
+                        int firstUserId = room.GetFirstUserId();
+                        Brocast(room, OpCode.FIGHT, FightCode.TURN_BRO, firstUserId);//让第一个人抢地主
+                    }
+                    
                 }
             });
         }
+
+        
 
         /// <summary>
         /// 开始战斗  三个人都准备了  由匹配房间调用
@@ -229,7 +252,7 @@ namespace CardGameServer.Logic
 
                 //抢地主
                 int firstUserId = room.GetFirstUserId();
-                Brocast(room,OpCode.FIGHT,FightCode.QIANG_LANDLORD_BRO,firstUserId);
+                Brocast(room,OpCode.FIGHT,FightCode.TURN_BRO,firstUserId);//让第一个人抢地主
             });
         }
 

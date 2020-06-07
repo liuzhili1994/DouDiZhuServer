@@ -123,8 +123,17 @@ namespace CardGameServer.Cache.Room
         public bool ChuPai(int userId, CardsType type,int length,CardWeight weight,List<CardDto> cardsList)
         {
             bool result = false;
+            //自己出牌
+            //判断最大是不是自己
+            if (userId == round.currentBiggsetId)
+            {
+                //自己的牌，别人都不要
+                //随便出
+                result = true;
+            }
+            //管别人的牌
             //同类型比较
-            if (type == round.lastCardsType)
+            else if (type == round.lastCardsType)
             {
                 
                 //特殊的类型  还需要比长度

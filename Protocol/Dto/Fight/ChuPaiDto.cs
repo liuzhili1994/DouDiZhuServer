@@ -44,5 +44,16 @@ namespace Protocol.Dto.Fight
             this.length = cardsList.Count;
             this.isLeagl = this.type == CardsType.None;
         }
+
+        public void Set(int userId, List<CardDto> cards)
+        {
+            this.userId = userId;
+            this.cardsList = cards;
+            var typeWeight = cardsList.GetCardsTypeWeight();
+            this.type = typeWeight.type;
+            this.weight = typeWeight.weight;
+            this.length = cardsList.Count;
+            this.isLeagl = this.type == CardsType.None;
+        }
     }
 }

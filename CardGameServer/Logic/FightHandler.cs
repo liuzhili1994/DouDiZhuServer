@@ -56,11 +56,17 @@ namespace CardGameServer.Logic
 
                 int userId = user.GetId(client);
                 var room = fight.GetRoom(userId);
+                if (room.round.currentBiggsetId == userId)
+                {
+                    //不能不出
+                    client.StartSend(OpCode.FIGHT, FightCode.BUCHU_SRES, null);
+                    return;
+                }
                 //给客户端发送消息  我收到了你的不出请求
                 client.StartSend(OpCode.FIGHT,FightCode.BUCHU_BRO,null);
 
                 //让下家出牌
-                Turn(room);
+                Turn(room,FightCode.CHUPAI_TURN_BRO);
             });
         }
         /// <summary>
@@ -111,21 +117,24 @@ namespace CardGameServer.Logic
         }
 
         /// <summary>
-        /// 转换出牌
+        /// 转换下家
         /// </summary>
-        private void Turn(FightRoom room)
+        /// <param name="room">房间</param>
+        /// <param name="subCode">是出牌转换还是抢地主转换</param>
+        private void Turn(FightRoom room,int subCode)
         {
             int nextUserId = room.TurnNext();
             if (room.leavePlayerIdList.Contains(nextUserId))
             {
                 //掉线了就不出牌，
-                Turn(room);
+                Turn(room,subCode);
             }
             else
             {
                 //没有掉线
-                var client = user.GetClientById(nextUserId);
-                client.StartSend(OpCode.FIGHT,FightCode.TURN_SRES,null);
+                //var client = user.GetClientById(nextUserId);
+                //client.StartSend(OpCode.FIGHT, FightCode.CHUPAI_TURN_BRO, null);
+                Brocast(room,OpCode.FIGHT,subCode,nextUserId);
             }
         }
 
@@ -138,13 +147,17 @@ namespace CardGameServer.Logic
                 }
 
                 int userId = user.GetId(client);
+                if (userId != dto.userId)
+                {
+                    throw new Exception("玩家作弊！客户端id与服务器保存的id 不一致");
+                }
                 var room = fight.GetRoom(userId);
                 //玩家出牌
                 //玩家不在
                 if (room.leavePlayerIdList.Contains(userId))
                 {
                     //直接换下家
-                    Turn(room);
+                    Turn(room,FightCode.CHUPAI_TURN_BRO);
                 }
                 else
                 {
@@ -152,9 +165,9 @@ namespace CardGameServer.Logic
                     if (flag)
                     {
                         //能管上
-                        client.StartSend(OpCode.FIGHT,FightCode.CHUPAI_SRES,true);
-                        //给其他客户端广播，关上了
-                        Brocast(room,OpCode.FIGHT,FightCode.CHUPAI_BRO,dto,client);
+                        //client.StartSend(OpCode.FIGHT,FightCode.CHUPAI_SRES,1);
+                        //广播，管上了
+                        Brocast(room,OpCode.FIGHT,FightCode.CHUPAI_BRO,dto);
                         //检测手牌，小于1  就赢了
                         var cards = room.GetPlayerCards(userId);
                         if (cards.Count == 0)
@@ -166,14 +179,14 @@ namespace CardGameServer.Logic
                         {
                             //还有牌
                             //转换出牌
-                            Turn(room);
+                            Turn(room,FightCode.CHUPAI_TURN_BRO);
                             
                         }
                     }
                     else
                     {
                         //管不上
-                        client.StartSend(OpCode.FIGHT,FightCode.CHUPAI_SRES,false);
+                        client.StartSend(OpCode.FIGHT,FightCode.CHUPAI_SRES,null);
                     }
                 }
             });
@@ -195,16 +208,19 @@ namespace CardGameServer.Logic
                 if (flag)//抢地主
                 {
                     room.SetLandlord(userId);
-                    //给每个客户端发消息谁抢了地主  还要把底牌发给地主
-                    client.StartSend(OpCode.FIGHT, FightCode.QIANG_LANDLORD_SRES, new LandlordDto(userId, room.tableCards));
-                    Brocast(room, OpCode.FIGHT, FightCode.QIANG_LANDLORD_SRES, null, client);//不用给自己发
+                    //给每个客户端发消息谁抢了地主  还要把底牌发给地主,不是农民需要显示底牌是什么所以也不要把底牌发过去
+                    Brocast(room, OpCode.FIGHT, FightCode.QIANG_LANDLORD_BRO, new LandlordDto(userId, room.tableCards));
+
+                    //让地主出牌
+                    Brocast(room, OpCode.FIGHT, FightCode.CHUPAI_TURN_BRO, userId);
+
                 }
                 else
                 {
                     //不抢地主
                     //自己的抢地主按钮隐藏
                     //将下轮 该谁抢地主的id广播给客户端
-                    Brocast(room,OpCode.FIGHT,FightCode.TURN_BRO,room.TurnNext());
+                    Turn(room, FightCode.QIANG_TURN_BRO);
                     //广播谁不抢
                     Brocast(room,OpCode.FIGHT,FightCode.BUQIANG_LANDLORD_BRO,userId);
 
@@ -224,7 +240,7 @@ namespace CardGameServer.Logic
 
                         //抢地主
                         int firstUserId = room.GetFirstUserId();
-                        Brocast(room, OpCode.FIGHT, FightCode.TURN_BRO, firstUserId);//让第一个人抢地主
+                        Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
                     }
                     
                 }
@@ -252,7 +268,7 @@ namespace CardGameServer.Logic
 
                 //抢地主
                 int firstUserId = room.GetFirstUserId();
-                Brocast(room,OpCode.FIGHT,FightCode.TURN_BRO,firstUserId);//让第一个人抢地主
+                Brocast(room,OpCode.FIGHT,FightCode.QIANG_TURN_BRO,firstUserId);//让第一个人抢地主
             });
         }
 

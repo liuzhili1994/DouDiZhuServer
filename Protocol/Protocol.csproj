@@ -47,7 +47,7 @@
     <Compile Include="Dto\Constant\CardConstant.cs" />
     <Compile Include="Dto\Fight\ChuPaiDto.cs" />
     <Compile Include="Code\FightCode.cs" />
-    <Compile Include="Dto\Constant\DictionaryConstant.cs" />
+    <Compile Include="Dto\Constant\EXtensionConstant.cs" />
     <Compile Include="Dto\Fight\LandlordDto.cs" />
     <Compile Include="Dto\Fight\OverDto.cs" />
   </ItemGroup>

@@ -19,11 +19,10 @@ namespace CardGameServer.Cache.Room
 
         public CardWeight lastCardsWeight;
 
-        
         /// <summary>
-        /// 开始出牌   设置完了地主之后 发了底牌就该出牌了
-        /// Start只会调用一次  在这里初始化
+        /// 开始出牌   设置完了地主之后 发了底牌就该出牌了 
         /// </summary>
+        /// <param name="userId"></param>
         public void Start(int userId)
         {
             this.currentUserId = userId;

@@ -61,14 +61,18 @@ namespace Protocol.Dto.Fight
 
         public void RemoveCard(CardDto card)
         {
-            if (cardList.Contains(card))
+            for (int i = 0; i < cardList.Count; i++)
             {
-                cardList.Remove(card);
+                if (cardList[i].name == card.name)
+                {
+                    cardList.RemoveAt(i);
+                }
             }
-            else
-            {
-                throw new Exception("没有这个牌，你是咋出的？");
-            }
+            
+            //else
+            //{
+            //    throw new Exception("没有这个牌，你是咋出的？");
+            //}
         }
 
         public List<CardDto> GetCards()

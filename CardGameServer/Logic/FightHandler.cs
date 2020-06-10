@@ -63,7 +63,8 @@ namespace CardGameServer.Logic
                     return;
                 }
                 //给客户端发送消息  我收到了你的不出请求
-                client.StartSend(OpCode.FIGHT,FightCode.BUCHU_BRO,null);
+                //client.StartSend(OpCode.FIGHT,FightCode.BUCHU_BRO,null);
+                Brocast(room,OpCode.FIGHT,FightCode.BUCHU_BRO,userId);
 
                 //让下家出牌
                 Turn(room,FightCode.CHUPAI_TURN_BRO);
@@ -218,11 +219,13 @@ namespace CardGameServer.Logic
                 else
                 {
                     //不抢地主
+                   
+                   
+                    //广播谁不抢 显示他的操作结果
                     //自己的抢地主按钮隐藏
-                    //将下轮 该谁抢地主的id广播给客户端
-                    Turn(room, FightCode.QIANG_TURN_BRO);
-                    //广播谁不抢
                     Brocast(room,OpCode.FIGHT,FightCode.BUQIANG_LANDLORD_BRO,userId);
+
+                    
 
                     int count = room.BuQiang();
                     if (count == 3)
@@ -241,8 +244,12 @@ namespace CardGameServer.Logic
                         //抢地主
                         int firstUserId = room.GetFirstUserId();
                         Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
+                        return;
                     }
-                    
+
+                    //将下轮 该谁抢地主的id广播给客户端
+                    Turn(room, FightCode.QIANG_TURN_BRO);
+
                 }
             });
         }

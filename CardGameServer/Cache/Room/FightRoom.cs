@@ -81,6 +81,7 @@ namespace CardGameServer.Cache.Room
             {
                 player.RemoveCard(null,true);
             }
+            tableCards.Clear();
             //洗牌
             cardLibrary.Reflesh();
             //发牌
@@ -129,7 +130,9 @@ namespace CardGameServer.Cache.Room
             {
                 //自己的牌，别人都不要
                 //随便出
-                result = true;
+                //但是要符合规则
+                if(type != CardsType.None)
+                    result = true;
             }
             //管别人的牌
             //同类型比较
@@ -343,7 +346,6 @@ namespace CardGameServer.Cache.Room
                 
                 //重新发牌
                 InitCards();
-
                 this.buQiangCount = 0;
             }
             return result;

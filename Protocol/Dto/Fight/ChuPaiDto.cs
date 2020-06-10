@@ -42,7 +42,7 @@ namespace Protocol.Dto.Fight
             this.type = typeWeight.type;
             this.weight = typeWeight.weight;
             this.length = cardsList.Count;
-            this.isLeagl = this.type == CardsType.None;
+            this.isLeagl = this.type != CardsType.None;
         }
 
         public void Set(int userId, List<CardDto> cards)
@@ -53,7 +53,7 @@ namespace Protocol.Dto.Fight
             this.type = typeWeight.type;
             this.weight = typeWeight.weight;
             this.length = cardsList.Count;
-            this.isLeagl = this.type == CardsType.None;
+            this.isLeagl = this.type != CardsType.None;
         }
     }
 }

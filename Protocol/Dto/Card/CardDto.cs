@@ -21,6 +21,7 @@ namespace Protocol.Dto.Card
         /// 权值
         /// </summary>
         public CardWeight weight;
+        
 
         public CardDto()
         {

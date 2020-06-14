@@ -346,6 +346,8 @@ namespace CardGameServer.Cache.Room
                 
                 //重新发牌
                 InitCards();
+                //初始化回合
+                round.Turn(GetFirstUserId());
                 this.buQiangCount = 0;
             }
             return result;

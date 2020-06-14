@@ -46,7 +46,7 @@ namespace Protocol.Dto.Constant
             for (int i = 0; i < cards.Count - 1; i++)
             {
                 //判断是否是连续的
-                if (cards[i].weight != cards[i + 1].weight - 1) return false;
+                if (cards[i].weight != cards[i + 1].weight + 1) return false;
             }
             return true;
         }
@@ -411,8 +411,8 @@ namespace Protocol.Dto.Constant
         One,
         Two,
 
-        BJoker,
         SJoker,
+        BJoker,
     }
 
     [Serializable]

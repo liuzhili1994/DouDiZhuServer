@@ -135,6 +135,12 @@ namespace CardGameServer.Logic
                     return;
                 }
 
+                if (userCache.IsOnLine(client))
+                {
+                    Console.WriteLine("角色已经在线，只是更新一下角色信息");
+                    return;
+                }
+
                 //上线成功
                 int userId = userCache.GetId(accountId);
                 userCache.OnLine(client,userId);

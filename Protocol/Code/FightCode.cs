@@ -25,6 +25,9 @@ namespace Protocol.Code
 
         public const int CHANGE_MUTIPLIER = 14;//改变房间倍数
 
-        public const int Restart = 17;//都不抢重新开始
+        public const int RESTART = 17;//重新开始
+
+        public const int BACKTOFIGHT_CREQ = 18;//回去继续战斗
+        public const int BACKTOFIGHT_SRES = 19;//回去继续战斗
     }
 }

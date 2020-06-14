@@ -40,8 +40,8 @@ namespace Protocol.Dto.Constant
         {
             //长度限制5-12张
             if (cards.Count < 5 || cards.Count > 12) return false;
-            //最后一张不能超过A
-            if (cards[cards.Count - 1].weight > CardWeight.One) return false;
+            //第一张不能超过A
+            if (cards[0].weight > CardWeight.One) return false;
             //是不是连着的 且不能超过A
             for (int i = 0; i < cards.Count - 1; i++)
             {
@@ -55,15 +55,15 @@ namespace Protocol.Dto.Constant
         {
             //长度限制
             if (cards.Count < 6 || cards.Count % 2 != 0) return false;
-            //最后一张不能超过A
-            if (cards[cards.Count - 1].weight > CardWeight.One) return false;
+            //第一张不能超过A
+            if (cards[0].weight > CardWeight.One) return false;
             //是不是连着的 且不能超过A
-            for (int i = 0; i < cards.Count - 1; i+=2)
+            for (int i = 0; i < cards.Count - 2; i+=2)
             {
                 //判断是否是连续的
                 if (cards[i].weight != cards[i + 1].weight) return false;
 
-                if (cards[i].weight != cards[i + 2].weight - 1) return false;
+                if (cards[i].weight != cards[i + 2].weight + 1) return false;
             }
             return true;
         }
@@ -72,17 +72,17 @@ namespace Protocol.Dto.Constant
         {
             //长度限制
             if (cards.Count < 6 || cards.Count % 3 != 0) return false;
-            //最后一张不能超过A
-            if (cards[cards.Count - 1].weight > CardWeight.One) return false;
+            //第一张不能超过A
+            if (cards[0].weight > CardWeight.One) return false;
             //是不是连着的 且不能超过A
-            for (int i = 0; i < cards.Count - 1; i += 3)
+            for (int i = 0; i < cards.Count - 3; i += 3)
             {
                 //判断是否是连续的
                 if (cards[i].weight != cards[i + 1].weight) return false;
 
                 if (cards[i + 1].weight != cards[i + 2].weight) return false;
 
-                if (cards[i].weight != cards[i + 3].weight - 1) return false;
+                if (cards[i].weight != cards[i + 3].weight + 1) return false;
             }
             return true;
         }
@@ -132,8 +132,10 @@ namespace Protocol.Dto.Constant
             }
             else //双在后
             {
-                if (cards[1].weight == cards[2].weight && cards[2].weight == cards[3].weight)
+                //判断前三个是否一样
+                if (cards[0].weight == cards[1].weight && cards[1].weight == cards[2].weight)
                 {
+                    //判断后两个是否一样
                     if (cards[3].weight == cards[4].weight) return new ThreeFront(true,true);
                 }
                 return new ThreeFront();
@@ -158,7 +160,7 @@ namespace Protocol.Dto.Constant
         {
             if (cards.Count != 2) return false;
 
-            if (cards[0].weight == CardWeight.SJoker && cards[1].weight == CardWeight.BJoker) return true;
+            if (cards[0].weight == CardWeight.BJoker && cards[1].weight == CardWeight.SJoker) return true;
 
             return false;
         }

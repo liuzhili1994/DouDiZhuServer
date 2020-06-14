@@ -37,6 +37,14 @@ namespace CardGameServer.Logic
                 case FightCode.BUCHU_CREQ:
                     BuChu(client);
                     break;
+
+                case FightCode.BACKTOFIGHT_CREQ:
+                    {
+                        SingleExecute.Instance.Execute(()=> {
+                            client.StartSend(OpCode.FIGHT, FightCode.BACKTOFIGHT_SRES, null);
+                        });
+                    }
+                    break;
                 default:
                     break;
             }
@@ -231,7 +239,7 @@ namespace CardGameServer.Logic
                     if (count == 3)
                     {
                         //重新开始。给客户端发送消息 重新开始 客户端将ui重置
-                        Brocast(room, OpCode.FIGHT, FightCode.Restart, null);
+                        Brocast(room, OpCode.FIGHT, FightCode.RESTART, null);
 
                         //发牌
                         foreach (var uId in room.playerList)
@@ -281,6 +289,7 @@ namespace CardGameServer.Logic
 
         /// <summary>
         /// 玩家退出房间或者掉线
+        /// FIXME 本局结束之后也要退出房间//不能扣除豆子  计划加入一个room 的结束flag 如果退出的时候战斗已经结束就return/同时房间人数减少1
         /// </summary>
         /// <param name="client"></param>
         private void ExitRoom(ClientPeer client)

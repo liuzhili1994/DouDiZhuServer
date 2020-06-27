@@ -26,16 +26,16 @@ namespace CardGameServer.Cache.Room
         public FightRoom Creat(List<int> userIds)
         {
             FightRoom room = null;
-            if (roomQueue.Count > 0)
-            {
-                room = roomQueue.Dequeue();
-                room.Init(userIds);
-            }
-            else
-            {
-                room = new FightRoom(id.Add_Get(),userIds);
-            }
-
+            //if (roomQueue.Count > 0)
+            //{
+            //    room = roomQueue.Dequeue();
+            //}
+            //else
+            //{
+            //    room = new FightRoom(id.Add_Get(),userIds);
+            //}
+            room = new FightRoom(id.Add_Get(), userIds);
+            room.Init(userIds);
             //存储
             foreach (var id in userIds)
             {
@@ -81,7 +81,10 @@ namespace CardGameServer.Cache.Room
         {
             foreach (var item in room.playerList)
             {
-                uIdRidDic.Remove(item.UserId);
+                if (IsFighting(item.UserId))//有些人提前离开了 就提前已经删除了
+                {
+                    uIdRidDic.Remove(item.UserId);
+                }
             }
             rIdRoomDic.Remove(room.id);
 

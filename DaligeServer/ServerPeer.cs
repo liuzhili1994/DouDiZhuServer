@@ -64,7 +64,7 @@ namespace DaligeServer
                     temClientPeer.receiveCompleted += ReceiveCompleted;
                     clientPeerPool.Enqueue(temClientPeer);
                 }
-                Console.WriteLine("服务器开启成功...");
+                Console.WriteLine("服务器开启成功...端口号：" + _port);
 
                 StartAccept();
             }

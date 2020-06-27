@@ -9,9 +9,9 @@ namespace CardGameServer.Cache.Room
     /// </summary>
     public class Round
     {
-        public int currentUserId;
+        public int currentUserId = -1 ;
 
-        public int currentBiggsetId;
+        public int currentBiggsetId = -1;
 
         public CardsType lastCardsType;
 
@@ -19,6 +19,19 @@ namespace CardGameServer.Cache.Room
 
         public CardWeight lastCardsWeight;
 
+        public Round()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            currentUserId = -1;
+            currentBiggsetId = -1;
+            lastCardsType = CardsType.None;
+            lastCardsLength = 0;
+            lastCardsWeight = 0;
+        }
         /// <summary>
         /// 开始出牌   设置完了地主之后 发了底牌就该出牌了 
         /// </summary>
@@ -55,6 +68,11 @@ namespace CardGameServer.Cache.Room
         public void Turn(int nextUserId)
         {
             this.currentUserId = nextUserId;
+        }
+
+        public void Reset()
+        {
+            Init();
         }
     }
 }

@@ -29,5 +29,6 @@ namespace Protocol.Code
 
         public const int BACKTOFIGHT_CREQ = 18;//回去继续战斗
         public const int BACKTOFIGHT_SRES = 19;//回去继续战斗
+        public const int BACKTOFIGHT_BRO = 20;//强制回去继续战斗
     }
 }

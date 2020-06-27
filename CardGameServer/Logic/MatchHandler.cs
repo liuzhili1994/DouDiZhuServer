@@ -39,6 +39,14 @@ namespace CardGameServer.Logic
                 case MatchRoomCode.READY_CREQ:
                     Ready(client);
                     break;
+                case MatchRoomCode.BACK_CREQ:
+                    {
+                        SingleExecute.Instance.Execute(()=> {
+                            client.StartSend(OpCode.MATCHROOM,MatchRoomCode.BACK_SRES,null);
+                            CancelMatch(client);
+                        });
+                    }
+                    break;
                 default:
                     break;
             }
@@ -100,7 +108,7 @@ namespace CardGameServer.Logic
                 {
                     return;//非法操作 不能离开
                 }
-
+                
                 //正常离开
                 MatchRoom room = match.Leave(userId);
                 if (!room.IsEmpty())

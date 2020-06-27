@@ -9,6 +9,7 @@ namespace CardGameServer.Cache.Room
 {
     public class FightRoom
     {
+        public bool isFighting;
         /// <summary>
         /// 不抢多少次重开？ 
         /// </summary>
@@ -47,11 +48,6 @@ namespace CardGameServer.Cache.Room
         public FightRoom(int id, List<int> userIds)
         {
             this.id = id;
-            this.multiple = 1;
-            leavePlayerIdList = new List<int>();
-            tableCards = new List<CardDto>();
-            cardLibrary = new CardLibrary();
-            round = new Round();
             Init(userIds);
         }
         /// <summary>
@@ -60,6 +56,13 @@ namespace CardGameServer.Cache.Room
         /// <param name="userIds"></param>
         public void Init(List<int> userIds)
         {
+            
+            this.multiple = 1;
+            leavePlayerIdList = new List<int>();
+            tableCards = new List<CardDto>();
+            cardLibrary = new CardLibrary();
+            round = new Round();
+
             playerList = new List<PlayerDto>(3);
             foreach (var userId in userIds)
             {
@@ -103,14 +106,15 @@ namespace CardGameServer.Cache.Room
         /// 获取下一个出牌者
         /// </summary>
         /// <param name="currentUserId"></param>
-        /// <returns></returns>
-        private int GetNextUserId(int currentUserId)
+        /// <returns></returns>                             
+        private int GetNextUserId(int currentUserId)        
         {
             for (int i = 0; i < playerList.Count; i++)
             {
                 if (playerList[i].UserId == currentUserId)
                 {
-                    return (i + 1) % 3;
+                    return playerList[(i + 1) % 3].UserId;
+                    //return (i + 1) % 3;
                 }
             }
 
@@ -248,6 +252,8 @@ namespace CardGameServer.Cache.Room
             //开始回合
             round.Start(userId);
 
+            isFighting = true;
+
         }
 
         /// <summary>
@@ -314,11 +320,12 @@ namespace CardGameServer.Cache.Room
         }
 
         /// <summary>
-        /// 获取房间第一人的id 方便服务器判断让谁先抢地主
+        /// 获取房间第一人的id 方便服务器判断让谁先抢地主  FIXME 如果这个playerList[0]掉线了呢 ？？？
         /// </summary>
         /// <returns></returns>
         public int GetFirstUserId()
         {
+            
             return playerList[0].UserId;
         }
 
@@ -363,6 +370,8 @@ namespace CardGameServer.Cache.Room
             this.tableCards.Clear();
             this.multiple = 1;
             this.buQiangCount = 0;
+            this.isFighting = false;
+            round.Reset();
         }
     }
 }

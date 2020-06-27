@@ -56,9 +56,22 @@ namespace CardGameServer.Cache.Room
         /// <param name="client"></param>
         public void Enter(int userId,ClientPeer client)
         {
-            uIdClientDic.Add(userId,client);
-            uidList.Add(userId);
-            
+            if (!uIdClientDic.ContainsKey(userId))
+            {
+                uIdClientDic.Add(userId, client);
+            }
+            if (!uidList.Contains(userId))
+            {
+                uidList.Add(userId);
+            }
+
+            Console.WriteLine("当前有以下几个人。。。");
+            foreach (var item in uidList)
+            {
+                
+                Console.WriteLine(item);
+            }
+            Console.WriteLine("当前有以上几个人。。。");
         }
         /// <summary>
         /// 离开房间
@@ -68,17 +81,23 @@ namespace CardGameServer.Cache.Room
         {
             uIdClientDic.Remove(userId);
             uidList.Remove(userId);
-            
+            CancelReady(userId);
         }
 
         public void Ready(int userId)
         {
-            readyUidList.Add(userId);
+            if (!readyUidList.Contains(userId))
+            {
+                readyUidList.Add(userId);
+            }
         }
 
         public void CancelReady(int userId)
         {
-            readyUidList.Remove(userId);
+            if (readyUidList.Contains(userId))
+            {
+                readyUidList.Remove(userId);
+            }
         }
 
 

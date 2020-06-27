@@ -42,6 +42,7 @@ namespace CardGameServer.Logic
                     {
                         SingleExecute.Instance.Execute(()=> {
                             client.StartSend(OpCode.FIGHT, FightCode.BACKTOFIGHT_SRES, null);
+                            ExitRoom(client);
                         });
                     }
                     break;
@@ -235,7 +236,7 @@ namespace CardGameServer.Logic
 
                     
 
-                    int count = room.BuQiang();
+                    int count = room.BuQiang();//在这里重置了id
                     if (count == 3)
                     {
                         //重新开始。给客户端发送消息 重新开始 客户端将ui重置
@@ -281,6 +282,12 @@ namespace CardGameServer.Logic
                     client.StartSend(OpCode.FIGHT,FightCode.GET_CARDS_SRES, cardsDto);
                 }
 
+                string users = string.Empty;
+                foreach (var item in userIds)
+                {
+                    users += (item + " --> ");
+                }
+                Console.WriteLine("这几个人开始了战斗 ：" + users);
                 //抢地主
                 int firstUserId = room.GetFirstUserId();
                 Brocast(room,OpCode.FIGHT,FightCode.QIANG_TURN_BRO,firstUserId);//让第一个人抢地主
@@ -308,8 +315,64 @@ namespace CardGameServer.Logic
                 }
                 var room = fight.GetRoom(userId);
                 int count = room.ExitRoom(userId);
-                //离线的不要发啦。都离线了还发个鬼
-                Brocast(room,OpCode.FIGHT,FightCode.LEAVE_BRO,userId,client);
+                
+
+                //FIXME 如果当前我正在操作
+                //如果自己正在抢地主 让下家抢地主
+                //当前自己正在操作
+                //if (room.round.currentUserId == userId) 
+                //{
+                    
+                //    //出牌者是自己
+                //    if (room.round.currentBiggsetId == userId)
+                //    {
+                //        //出一张当前手里最小的牌
+                //       var cards = room.GetPlayerCards(userId);
+                //        CardDto smallCard = null;
+                //        foreach (var item in cards)
+                //        {
+                //            if (item.weight <= smallCard.weight)
+                //            {
+                //                smallCard = item;
+                //            }
+                //        }
+
+                //        ChuPai(client,new ChuPaiDto(userId,new List<CardDto>() { smallCard}));
+
+                //    }
+                //    else //出牌者不是自己
+                //    {
+                //        //游戏已经开始？
+                //        if (room.isFighting)
+                //        {
+                //            BuChu(client);
+
+                //        }
+                //        else //还在抢地主？
+                //        {
+                //            //Qiang_Landlord(client, false);
+                //            Brocast(room, OpCode.FIGHT, FightCode.BUQIANG_LANDLORD_BRO, userId,client);
+
+
+
+                //            int count1 = room.BuQiang();//在这里重置了id
+                //            if (count1 == 3)//重新开始
+                //            {
+                                
+                //                Brocast(room, OpCode.FIGHT, FightCode.BACKTOFIGHT_BRO, null,client);//让第一个人抢地主
+                //                return;
+                //            }
+
+                //            //将下轮 该谁抢地主的id广播给客户端
+                //            Turn(room, FightCode.QIANG_TURN_BRO);
+                //        }
+                       
+                //    }
+                //}
+                
+                //如果自己正在出牌  让下家出牌
+
+
                 //给所有人添加逃跑场次
                 //给逃跑玩家结算
                 var beens = room.multiple * 1000;
@@ -321,6 +384,12 @@ namespace CardGameServer.Logic
                     userModel.beens -= beens * 3;//逃跑的人减3倍
                     user.Update(userModel);
                 }
+
+                //把这个id从fightCache中移除  因为这个id跟 roomId绑定了
+                fight.uIdRidDic.Remove(userId);
+                //离线的不要发啦。都离线了还发个鬼
+                Brocast(room, OpCode.FIGHT, FightCode.LEAVE_BRO, userId, client);
+
                 if (count == 3)
                 {
                     fight.Destroy(room);
@@ -363,7 +432,7 @@ namespace CardGameServer.Logic
                 {
                     var target = user.GetClientById(player.UserId);
                     //给其他客户端发消息
-                    if (client == target)
+                    if (client == target || !fight.IsFighting(player.UserId))
                         continue;
                     target.StartSend(msg);
                 }

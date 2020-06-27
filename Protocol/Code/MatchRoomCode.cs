@@ -17,5 +17,8 @@ namespace Protocol.Code
         public const int READY_BRO = 5;
 
         public const int START_BRO = 6;
+
+        public const int BACK_CREQ = 10;//已经进入了房间现在要退出
+        public const int BACK_SRES = 11;//已经进入了房间现在要退出
     }
 }

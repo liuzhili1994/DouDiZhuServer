@@ -29,6 +29,10 @@ namespace Protocol.Dto.Fight
         /// 是否合法
         /// </summary>
         public bool isLeagl;
+        /// <summary>
+        /// 是不是最大者出的牌  如果是就播放牌的语音，不是就播放压死，大你
+        /// </summary>
+        public bool isBiggest;
 
         public ChuPaiDto()
         {
@@ -43,6 +47,7 @@ namespace Protocol.Dto.Fight
             this.weight = typeWeight.weight;
             this.length = cardsList.Count;
             this.isLeagl = this.type != CardsType.None;
+            isBiggest = false;
         }
 
         public void Set(int userId, List<CardDto> cards)
@@ -54,6 +59,12 @@ namespace Protocol.Dto.Fight
             this.weight = typeWeight.weight;
             this.length = cardsList.Count;
             this.isLeagl = this.type != CardsType.None;
+            isBiggest = false;
+        }
+
+        public void Set(bool isBiggest)
+        {
+            this.isBiggest = isBiggest;
         }
     }
 }

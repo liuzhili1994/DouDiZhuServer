@@ -183,7 +183,7 @@ namespace Protocol.Dto.Constant
                     {
                         if (IsDouble(cards))
                         {
-                            type = CardsType.Single;
+                            type = CardsType.Double;
                         }
                         else if (IsJokerBoom(cards))
                         {

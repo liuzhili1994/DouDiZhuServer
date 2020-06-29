@@ -94,7 +94,7 @@ namespace CardGameServer.Logic
             {
                 var userModel = user.GetModelById(winUserIds[i]);
                 userModel.winCount++;
-                userModel.beens += beens;
+                userModel.beens += winIdentity == Identity.Landlord ? beens : beens / 2;
                 userModel.exp += 100;
                 user.Update(userModel);
             }
@@ -104,19 +104,19 @@ namespace CardGameServer.Logic
             {
                 var userModel = user.GetModelById(loseUserIds[i]);
                 userModel.loseCount++;
-                userModel.beens -= beens;
+                userModel.beens -= winIdentity == Identity.Landlord ? beens / 2 : beens;
                 userModel.exp += 50;
                 user.Update(userModel);
             }
-            //给逃跑玩家结算
-            for (int i = 0; i < room.leavePlayerIdList.Count; i++)
-            {
-                var userModel = user.GetModelById(room.leavePlayerIdList[i]);
-                userModel.runCount++;
-                userModel.loseCount++;
-                userModel.beens -= beens * 3;//逃跑的人减3倍
-                user.Update(userModel);
-            }
+            //给逃跑玩家结算  离开的时候已经结算了
+            //for (int i = 0; i < room.leavePlayerIdList.Count; i++)
+            //{
+            //    var userModel = user.GetModelById(room.leavePlayerIdList[i]);
+            //    userModel.runCount++;
+            //    userModel.loseCount++;
+            //    userModel.beens -= beens * 3;//逃跑的人减3倍
+            //    user.Update(userModel);
+            //}
             //给客户端发消息  游戏结束了
             var dto = new OverDto(winIdentity,winUserIds,beens);
             Brocast(room,OpCode.FIGHT,FightCode.OVER_BRO,dto);
@@ -171,7 +171,7 @@ namespace CardGameServer.Logic
                 }
                 else
                 {
-                    var flag = room.ChuPai(userId,dto.type,dto.length,dto.weight,dto.cardsList);
+                    var flag = room.ChuPai(dto);
                     if (flag)
                     {
                         //能管上
@@ -180,6 +180,8 @@ namespace CardGameServer.Logic
                         Brocast(room,OpCode.FIGHT,FightCode.CHUPAI_BRO,dto);
                         //检测手牌，小于1  就赢了
                         var cards = room.GetPlayerCards(userId);
+
+
                         if (cards.Count == 0)
                         {
                             //游戏结束
@@ -190,7 +192,14 @@ namespace CardGameServer.Logic
                             //还有牌
                             //转换出牌
                             Turn(room,FightCode.CHUPAI_TURN_BRO);
-                            
+                            if (cards.Count == 2)
+                            {
+                                Brocast(room,OpCode.FIGHT,FightCode.BAOJING_SRES,2);
+                            }
+                            else if (cards.Count == 1)
+                            {
+                                Brocast(room, OpCode.FIGHT, FightCode.BAOJING_SRES, 1);
+                            }
                         }
                     }
                     else
@@ -315,14 +324,14 @@ namespace CardGameServer.Logic
                 }
                 var room = fight.GetRoom(userId);
                 int count = room.ExitRoom(userId);
-                
+
 
                 //FIXME 如果当前我正在操作
                 //如果自己正在抢地主 让下家抢地主
                 //当前自己正在操作
                 //if (room.round.currentUserId == userId) 
                 //{
-                    
+
                 //    //出牌者是自己
                 //    if (room.round.currentBiggsetId == userId)
                 //    {
@@ -358,7 +367,7 @@ namespace CardGameServer.Logic
                 //            int count1 = room.BuQiang();//在这里重置了id
                 //            if (count1 == 3)//重新开始
                 //            {
-                                
+
                 //                Brocast(room, OpCode.FIGHT, FightCode.BACKTOFIGHT_BRO, null,client);//让第一个人抢地主
                 //                return;
                 //            }
@@ -366,24 +375,22 @@ namespace CardGameServer.Logic
                 //            //将下轮 该谁抢地主的id广播给客户端
                 //            Turn(room, FightCode.QIANG_TURN_BRO);
                 //        }
-                       
+
                 //    }
                 //}
-                
+
                 //如果自己正在出牌  让下家出牌
 
-
-                //给所有人添加逃跑场次
+                
+                
                 //给逃跑玩家结算
                 var beens = room.multiple * 1000;
-                for (int i = 0; i < room.leavePlayerIdList.Count; i++)
-                {
-                    var userModel = user.GetModelById(room.leavePlayerIdList[i]);
-                    userModel.runCount++;
-                    userModel.loseCount++;
-                    userModel.beens -= beens * 3;//逃跑的人减3倍
-                    user.Update(userModel);
-                }
+                var userModel = user.GetModelById(userId);
+                userModel.runCount++;
+                //userModel.loseCount++;  游戏结束的会结算2
+                userModel.beens -= beens * 3;//逃跑的人减3倍
+                user.Update(userModel);
+                
 
                 //把这个id从fightCache中移除  因为这个id跟 roomId绑定了
                 fight.uIdRidDic.Remove(userId);
@@ -432,7 +439,7 @@ namespace CardGameServer.Logic
                 {
                     var target = user.GetClientById(player.UserId);
                     //给其他客户端发消息
-                    if (client == target || !fight.IsFighting(player.UserId))
+                    if (client == target || !fight.IsFighting(player.UserId)) //提前退出的玩家不广播
                         continue;
                     target.StartSend(msg);
                 }

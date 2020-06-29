@@ -45,6 +45,8 @@ namespace CardGameServer.Cache.Room
         /// </summary>
         public Round round;
 
+        
+
         public FightRoom(int id, List<int> userIds)
         {
             this.id = id;
@@ -58,6 +60,8 @@ namespace CardGameServer.Cache.Room
         {
             
             this.multiple = 1;
+            this.isFighting = false;
+            
             leavePlayerIdList = new List<int>();
             tableCards = new List<CardDto>();
             cardLibrary = new CardLibrary();
@@ -125,31 +129,35 @@ namespace CardGameServer.Cache.Room
         /// 判断出的牌能不能管上  
         /// </summary>
         /// <returns></returns>
-        public bool ChuPai(int userId, CardsType type,int length,CardWeight weight,List<CardDto> cardsList)
+        public bool ChuPai(ChuPaiDto dto)
         {
             bool result = false;
             //自己出牌
             //判断最大是不是自己
-            if (userId == round.currentBiggsetId)
+            if (dto.userId == round.currentBiggsetId)
             {
                 //自己的牌，别人都不要
                 //随便出
                 //但是要符合规则
-                if(type != CardsType.None)
+                if (dto.type != CardsType.None) {
                     result = true;
+
+                    dto.Set(true);
+                }
+                    
             }
             //管别人的牌
             //同类型比较
-            else if (type == round.lastCardsType)
+            else if (dto.type == round.lastCardsType)
             {
                 
                 //特殊的类型  还需要比长度
-                if (type == CardsType.Straight || type == CardsType.Double_Straight)
+                if (dto.type == CardsType.Straight || dto.type == CardsType.Double_Straight)
                 {
-                    if (length > round.lastCardsLength)
+                    if (dto.length > round.lastCardsLength)
                     {
                         //判断权值
-                        if (weight > round.lastCardsWeight)
+                        if (dto.weight > round.lastCardsWeight)
                         {
                             //可以出牌
                             result = true;
@@ -158,7 +166,7 @@ namespace CardGameServer.Cache.Room
                 }
                 else  //普通的类型  只需要比权值
                 {
-                    if (weight > round.lastCardsWeight)
+                    if (dto.weight > round.lastCardsWeight)
                     {
                         result = true;
                     }
@@ -169,11 +177,11 @@ namespace CardGameServer.Cache.Room
             else  //跨类型比较
             {
                 //王炸
-                if (type == CardsType.Joker_Boom)
+                if (dto.type == CardsType.Joker_Boom)
                 {
                     result = true;
                 }
-                else if(type == CardsType.Boom)//普通炸弹
+                else if(dto.type == CardsType.Boom)//普通炸弹
                 {
                     if (round.lastCardsType != CardsType.Joker_Boom)
                     {
@@ -186,15 +194,15 @@ namespace CardGameServer.Cache.Room
             if (result)
             {
                 //移除手牌
-                RemovePlayerCards(userId,cardsList);
+                RemovePlayerCards(dto.userId,dto.cardsList);
                 //可能翻倍
-                if (type == CardsType.Boom)
+                if (dto.type == CardsType.Boom)
                     this.multiple *= 2;
-                else if (type == CardsType.Joker_Boom)
+                else if (dto.type == CardsType.Joker_Boom)
                     this.multiple *= 8;
 
                 //改变回合信息
-                round.ChangeBiggestId(userId,type,length,weight);
+                round.ChangeBiggestId(dto.userId, dto.type, dto.length, dto.weight);
             }
            
 

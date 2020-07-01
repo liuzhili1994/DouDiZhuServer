@@ -45,7 +45,10 @@ namespace CardGameServer.Cache.Room
         /// </summary>
         public Round round;
 
-        
+
+        public int autoBuQiang = -1;
+        public int autoBuChu = -1;
+
 
         public FightRoom(int id, List<int> userIds)
         {
@@ -379,6 +382,8 @@ namespace CardGameServer.Cache.Room
             this.multiple = 1;
             this.buQiangCount = 0;
             this.isFighting = false;
+            autoBuChu = -1;
+            autoBuQiang = -1;
             round.Reset();
         }
     }

@@ -10,10 +10,10 @@ namespace DaligeServer.Util.Timer
     public class TimeManager
     {
         private static TimeManager instance = null;
-
+        private static object lockObj = new object();
         public static TimeManager Instance {
             get {
-                lock (instance) {
+                lock (lockObj) {
                     if (instance == null)
                         instance = new TimeManager();
                     return instance;
@@ -43,9 +43,11 @@ namespace DaligeServer.Util.Timer
 
         public TimeManager() {
             //设置时间间隔
-            timer = new System.Timers.Timer(10);
+            timer = new System.Timers.Timer(20);
             //到达时间出发
             timer.Elapsed += Timer_Elapsed;
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
 
         /// <summary>
@@ -64,12 +66,16 @@ namespace DaligeServer.Util.Timer
                 }
                 removeList.Clear();
             }
-            
+            //Console.WriteLine(DateTime.Now.Ticks);
+            //Console.WriteLine("执行了一次");
             foreach (var model in idModelDic.Values)
             {
                 //DateTime.Now.Ticks
-                if (model.time <= DateTime.Now.Ticks)
+                if (model.time <= DateTime.Now.Ticks) {
                     model.Run();
+                    removeList.Add(model.id);
+                }
+                    
             }
         }
 

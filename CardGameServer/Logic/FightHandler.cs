@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using CardGameServer.Cache;
 using CardGameServer.Cache.Room;
 using DaligeServer;
@@ -145,6 +146,22 @@ namespace CardGameServer.Logic
                 //var client = user.GetClientById(nextUserId);
                 //client.StartSend(OpCode.FIGHT, FightCode.CHUPAI_TURN_BRO, null);
                 Brocast(room,OpCode.FIGHT,subCode,nextUserId);
+
+                //再添加一个延时任务 30s后不抢自动不抢
+                var client = user.GetClientById(nextUserId);
+                if (subCode == FightCode.QIANG_TURN_BRO)
+                {
+                    room.autoBuQiang = TimerMananger.Instance.AddTimeTask((int intPara) => {
+                        //30秒后自动不抢
+                        Qiang_Landlord(client, false);
+                        Console.WriteLine("自动不抢。。。");
+                    }, 10);
+                }
+                else if (subCode == FightCode.CHUPAI_TURN_BRO)
+                {
+                    //TODO 30s后自动不出
+                }
+
             }
         }
 
@@ -224,15 +241,23 @@ namespace CardGameServer.Logic
                 }
                 int userId = user.GetId(client);
                 var room = fight.GetRoom(userId);
+                //操作了将之前的定时任务取消
+                if (room.autoBuQiang != -1) //有定时任务
+                {
+                    TimerMananger.Instance.DeleteTimeTaskByID(room.autoBuQiang);
+                    room.autoBuQiang = -1;
+                }
+                
                 if (flag)//抢地主
                 {
                     room.SetLandlord(userId);
                     //给每个客户端发消息谁抢了地主  还要把底牌发给地主,不是农民需要显示底牌是什么所以也不要把底牌发过去
                     Brocast(room, OpCode.FIGHT, FightCode.QIANG_LANDLORD_BRO, new LandlordDto(userId, room.tableCards));
 
+                    
+
                     //让地主出牌
                     Brocast(room, OpCode.FIGHT, FightCode.CHUPAI_TURN_BRO, userId);
-
                 }
                 else
                 {
@@ -259,9 +284,24 @@ namespace CardGameServer.Logic
                             tempClient.StartSend(OpCode.FIGHT, FightCode.GET_CARDS_SRES, cardsDto);
                         }
 
-                        //抢地主
-                        int firstUserId = room.GetFirstUserId();
-                        Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
+
+                        TimerMananger.Instance.AddTimeTask((int id) => {
+                            Console.WriteLine(string.Format("当前房间id ：{0} 延时任务id为：{1} ==> 延迟2秒开始抢地主。。当前执行的线程：{2}", room.id, id, Thread.CurrentThread.ManagedThreadId));
+                            //抢地主
+                            int firstUserId = room.GetFirstUserId();
+                            Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
+
+                            //再添加一个延时任务 30s后不抢自动不抢
+                            room.autoBuQiang = TimerMananger.Instance.AddTimeTask((int intPara)=> {
+                                //30秒后自动不抢
+                                Qiang_Landlord(client,false);
+                                Console.WriteLine("自动不抢。。。");
+                            },12);//这里要加上发牌的两秒
+
+                        }, 2f);
+                        ////抢地主
+                        //int firstUserId = room.GetFirstUserId();
+                        //Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
                         return;
                     }
 
@@ -297,9 +337,22 @@ namespace CardGameServer.Logic
                     users += (item + " --> ");
                 }
                 Console.WriteLine("这几个人开始了战斗 ：" + users);
-                //抢地主
-                int firstUserId = room.GetFirstUserId();
-                Brocast(room,OpCode.FIGHT,FightCode.QIANG_TURN_BRO,firstUserId);//让第一个人抢地主
+                TimerMananger.Instance.AddTimeTask((int id) => {
+                    Console.WriteLine(string.Format("当前房间id ：{0} 延时任务id为：{1} ==> 延迟2秒开始抢地主。。当前执行的线程：{2}", room.id, id, Thread.CurrentThread.ManagedThreadId));
+                    //抢地主
+                    int firstUserId = room.GetFirstUserId();
+                    Brocast(room, OpCode.FIGHT, FightCode.QIANG_TURN_BRO, firstUserId);//让第一个人抢地主
+
+                    //再添加一个延时任务 30s后不操作自动不抢
+                   room.autoBuQiang = TimerMananger.Instance.AddTimeTask((int intPara) => {
+                       //30秒后自动不抢
+                        Qiang_Landlord(user.GetClientById(firstUserId), false);
+                        Console.WriteLine("自动不抢。。。");
+                    }, 10);
+
+                }, 2f);
+
+
             });
         }
 

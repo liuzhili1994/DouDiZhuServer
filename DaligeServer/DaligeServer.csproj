@@ -41,6 +41,8 @@
     <Compile Include="MessageData.cs" />
     <Compile Include="ServerPeer.cs" />
     <Compile Include="SingleExecute.cs" />
+    <Compile Include="Util\Timer\TaskModel.cs" />
+    <Compile Include="Util\Timer\TimerMananger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
